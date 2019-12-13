@@ -4,14 +4,14 @@
     </div>
     <div class='event-separator'></div>
     <div id='main-search-event-search'>
-        <form id='search-event' autocomplete="off">
+        <form id='search-event' autocomplete="off" method='POST' action='event_searched.php'>
             <div id='event-criteria'>
                 <div class='autocomplete'>
-                    <input type='text' id='saisieDepartementRecherche' placeholder="Saisissez un département..." title="Lieu de l'événement"> 
+                    <input type='text' name='saisieDepartementRecherche' id='saisieDepartementRecherche' placeholder="Saisissez un département..." title="Lieu de l'événement"> 
                 </div>
-                <input type='date' id='dateEvenement' title="Date de l'événement">
-                <input type='number' id='effectifMin' placeholder="Effectif minimum" title='Effectif minimum' min=0 max=1000000>
-                <input type='number' id='effectifMax' placeholder="Effectif maximum" title='Effectif maximum' min=0 max=1000000>
+                <input type='date' name='dateEvenement' id='dateEvenement' title="Date de l'événement">
+                <input type='number' name='effectifMin' id='effectifMin' placeholder="Effectif minimum" title='Effectif minimum' min=0 max=1000000>
+                <input type='number' name='effectifMax' id='effectifMax' placeholder="Effectif maximum" title='Effectif maximum' min=0 max=1000000>
                 <input type='submit' id='submitSearchEvent' placeholder="Rechercher" value='Rechercher'>
             </div>
             <div id='search-event-category'>
@@ -21,6 +21,7 @@
                 <input type='button' name='congres' value='Congrès'>
                 <input type='button' name='repas' value='Repas'>
                 <input type='button' name='exposition' value='Exposition'>
+                <input type='hidden' id='choixCategorie' name='categorie' value=''>
             </div>
         </form>
     </div>

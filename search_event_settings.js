@@ -173,6 +173,8 @@ function autocomplete(inp, arr) {
 /* Événement de clique sur les catégories : DÉBUT */
 var categorie = document.querySelectorAll('#search-event-category input');
 
+var hiddenInput = document.querySelector('#choixCategorie');
+
 //Permet d'enlever les accents d'une chaine de caractere
 String.prototype.sansAccent = function(){
   var accent = [
@@ -198,6 +200,8 @@ function removeAllOpacity(){
   categorie.forEach(x => {
     x.style.opacity = 1;
     x.setAttribute('name', '');
+    hiddenInput.setAttribute('value', '');
+    hiddenInput.setAttribute('name', 'categorie');
   });
 }
 
@@ -207,10 +211,12 @@ categorie.forEach(x => {
       removeAllOpacity();
       x.style.opacity = 0.5;
       x.setAttribute('name', (x.getAttribute('value').sansAccent()).toLowerCase());
+      hiddenInput.setAttribute('value', x.getAttribute('name'));
     }
     else{
       x.style.opacity = 1;
       x.setAttribute('name', '');
+      hiddenInput.setAttribute('value', '');
     }
   });
 

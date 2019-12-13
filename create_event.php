@@ -34,8 +34,9 @@
     <div class='event-separator'></div>
     <div id='main-create-event-result'>
         <!-- Ici on met si l'événement c'est bien créé ou non -->
-
-
-
+        <?php 
+        if(isset($estEnvoye) && $estEnvoye)
+            echo '<p class=\'success\'>L\'évenement a bien été créé !</p>'
+        ?>
     </div>
 </div>
