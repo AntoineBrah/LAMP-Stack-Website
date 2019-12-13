@@ -1,0 +1,672 @@
+body{
+    margin: 0;
+    background-color: #ffffff;
+}
+
+/* menu */
+#navbar{
+    height: 60px;
+    display: flex;
+    border-top: 4px solid #e58700;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Positionne le menu en haut de la page */
+    width: 100%;
+    background-color: #ffffff;
+    z-index: 2;
+}
+
+#navbar #navbar-content{
+    width: 1024px;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+#navbar #navbar-content #mobile-button{
+    display: none;
+}
+
+#navbar #navbar-content .logo{
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#navbar #navbar-content .logo a{
+    outline-style: none; /* Retire la bordure lors du clic */ 
+}
+
+#navbar #navbar-content .logo a img{
+    margin-top: 5px;
+}
+
+#navbar #navbar-content nav{
+    display: flex;
+    flex-direction: row;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #454545;
+    flex: 1; /* On fait en sorte que le nav occupe tout l'espace restant dans la navbar */
+    margin-left: 30px;
+    justify-content: space-between;
+    font-size: 1em;
+}
+
+#navbar #navbar-content nav .nav-event{
+    display: inline-block;
+    position: relative;
+}
+
+#navbar #navbar-content nav .nav-event a{
+    text-decoration: none;
+    text-align: center;
+    padding: 14px 16px;
+    display: block;
+}
+
+#navbar #navbar-content nav .nav-event .drop-button{
+    border: none;
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    font-size: 1em;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#navbar #navbar-content nav .nav-event .drop-button i{
+    padding-right: 5px;
+}
+
+#navbar #navbar-content nav .nav-event .nav-event-dropdown{
+    display: none;
+    background-color: #ffffff;
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+}
+
+#navbar #navbar-content nav .nav-event:hover .nav-event-dropdown{
+    display: block; /* Quand on passe la souris sur 'nav-event' le block s'affiche */
+}
+
+#navbar #navbar-content nav .nav-identification{
+    padding: 0;
+    display: flex;
+    margin: 0;
+    list-style: none;
+    color: 
+}
+
+#navbar #navbar-content nav .nav-identification li{
+    margin: auto;
+    margin-left: 15px;
+}
+
+#navbar #navbar-content nav .nav-identification li:hover{
+    cursor: pointer;
+}
+
+#navbar #navbar-content nav .nav-identification li i{
+    padding-right: 3px;
+    margin: auto;
+}
+
+  /****************************/
+ /*  DEBUT :  NAVBAR2.PHP    */
+/****************************/
+
+#navbar #navbar-content nav .nav-identification2{
+    padding: 0;
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    list-style: none;
+}
+
+#navbar #navbar-content nav .nav-identification2 a{
+    text-decoration: none;
+    text-align: center;
+    padding: 14px 16px;
+    display: block;  
+}
+
+#navbar #navbar-content nav .nav-identification2 li{
+    margin-left: 15px;
+    text-decoration: none;
+    outline-style: none; 
+    color: #454545;
+}
+
+#navbar #navbar-content nav .nav-identification2 .online-button:hover{
+    cursor: pointer;
+}
+
+#navbar #navbar-content nav .nav-identification2 .online-button i{
+    padding-right: 3px;
+    margin: auto;
+}
+
+#navbar #navbar-content nav .nav-identification2 .online-button{
+    font-weight: bold;
+    height: 100%;
+    width: 100%;
+    background-color : #ffffff;
+    border: none;
+
+}
+
+#navbar #navbar-content nav .nav-identification2 .nav-identification2-dropdown{
+    display: none;
+    background-color: #ffffff;
+    flex-direction: column;
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+}
+
+#navbar #navbar-content nav .nav-identification2:hover .nav-identification2-dropdown{
+    display: block;
+}
+
+  /**************************/
+ /*  FIN :  NAVBAR2.PHP    */
+/**************************/
+
+
+/* Bloc de connexion */
+#signin-block{
+    display: none;
+    background-color: #ffffff;
+    box-shadow: 0 0 11px #eaf0f6;
+    position: absolute;
+    width: 550px;
+    left: 50%; 
+    top: 10%;
+    margin-left: -250px;
+    z-index: 4;
+}
+
+#signin-block .signin-block-header{
+    text-align: center;
+    font-family: 'Signika Negative', sans-serif;
+}
+
+#signin-block .signin-block-separator{
+    width: 80%;
+    height: 2px;
+    background-color: #000000;
+    margin: auto;
+}
+
+#signin-block #form-connection{
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Signika Negative', sans-serif;
+}
+
+#connexion-formulaire-identifiant{
+    margin-bottom: 7px;
+}
+
+.motdepasseoublie{
+    margin-top: 2px;
+    font-size: 0.7em;
+    outline-style: none;
+    text-decoration: none;
+    color: #7a1a8b;
+}
+
+.connexion-formulaire-infosComplementaires{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 0.8em;
+}
+
+.connexion-formulaire-erreur{
+    margin: 0;
+}
+
+#connexion-formulaire-soumettre{
+    margin-top: 3px;
+}
+
+.connexion-formulaire-pasDeCompte{
+    font-size: 0.9em;
+}
+
+.connexion-formulaire-pasDeCompte a{
+    text-decoration: underline;
+    color: #7a1a8b;
+    outline-style: none;
+}
+
+
+
+/* Bloc d'inscription */
+#signup-block{
+    display: none;
+    width: 1024px;
+    background-color: #ffffff;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    margin-left: -512px;
+    z-index: 4;
+    box-shadow: 0 0 11px #eaf0f6;
+}
+
+#signup-block .signup-content{
+    display: flex;
+    flex-direction: row;
+}
+
+.inscription-infos{
+    width: 50%;
+}
+
+.inscription-infos-header h2{
+    font-family: 'Signika Negative', sans-serif;
+    text-align: center;
+}
+
+.inscription-infos-separateur{
+    width: 80%;
+    height: 2px;
+    background-color: #000000;
+    margin: auto;
+}
+
+.inscription-infos-contenu{
+    width: 80%;
+    margin: auto;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.inscription-infos-contenu-texte{
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+}
+
+.inscription-infos-contenu-texte-logo{
+    height: 50px;
+    width: 50px;
+    display: flex;
+}
+
+.inscription-infos-contenu-texte{
+    margin-bottom: 10px;
+}
+
+.inscription-infos-contenu-texte p{
+    padding-left: 10px;
+    margin: 0;
+    font-family: 'Signika Negative', sans-serif;
+    font-size: 16px;
+}
+
+.inscription-formulaire{
+    width: 50%;
+}
+
+.inscription-formulaire-header h2{
+    font-family: 'Signika Negative', sans-serif;
+    text-align: center;
+}
+
+.inscription-formulaire-separateur{
+    width: 80%;
+    height: 2px;
+    background-color: #000000;
+    margin: auto;
+}
+
+#inscription-formulaire-contenu{
+    width: 80%;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Signika Negative', sans-serif;
+}
+
+#inscription-formulaire-contenu input, #inscription-formulaire-contenu select{
+    margin-bottom: 7px;
+}
+
+#inscription-formulaire-contenu-complementaire{
+    font-style: italic;
+    font-size: 13px;
+}
+
+#inscription-formulaire-contenu-complementaire p{
+    font-size: 10px;
+}
+
+#inscription-formulaire-contenu-soumettre{
+
+}
+
+
+
+/* Bloc filtre */
+#filter{
+    display: none;
+    height: 100vh; /* vh = viewport */
+    width: 100%;
+
+    position: absolute;
+    top: 0;
+    z-index: 3;
+    opacity: 0.5;
+    background-color: #646464;
+}
+
+
+/* HEADER */
+header{
+    background-image: url('slideshow-img/party.jpg');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: 50% 40%;    
+    height: 500px;
+    width: 100%;
+    margin-top: 64px;
+    z-index: -1;
+    transition: background 2s ease-out; /* donne l'effet de parcours d'image */
+}
+
+
+
+/* MAIN */
+main{
+    width: 1024px;
+    margin: auto;
+}
+
+main .main-presentation{
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 31px;
+}
+
+main .main-presentation div:nth-child(2){
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+main .main-presentation div{
+    flex: 1; /* permet de donner la même taille à toutes les divs */
+    background-color: #f3f3f3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+main .main-presentation div h2{
+    font-size: 1.2em;
+    font-family: "Comfortaa", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #454545;
+    text-align: center;
+    margin: 0;
+}
+
+main .main-presentation div p{
+    margin-top: 5px;
+    font-size: 0.8em;
+    text-align: center;
+    color: #454545;
+}
+
+main #main-search-event{
+    margin-top: 31px;
+    background-color: #f3f3f3;
+}
+
+main #main-search-event #main-search-event-header{
+    height: 50px;
+    display: flex;
+}   
+
+main #main-search-event #main-search-event-header h2{
+    margin: auto;
+    font-size: 1.5em;
+    font-family: "Comfortaa", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #454545;
+}
+
+.event-separator{
+    height: 2px;
+    background-color: #ffffff;
+}
+
+main #main-search-event #main-search-event-search{
+    display: flex;
+}
+
+#search-event{
+    padding: 5px;
+    margin: 5px;
+}
+
+#event-criteria{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#event-criteria .autocomplete{
+    display: flex;
+    position: relative;
+}
+
+
+#event-criteria input, #create-event-category, #submitCreateEvent{
+    padding: 12px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+
+/* Auto complétion pour les départements : début */
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 1;
+    /* Positionne les éléments à complétion automatique à la même largeur que le conteneur */
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+/* Quand on survol un élément */
+    background-color: #e9e9e9;
+}
+.autocomplete-active {
+/* Quand on navigue au travers des éléments avec les flèches */
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}
+/* Auto complétion pour les départements : fin */
+
+#event-criteria input:nth-child(n+2), #create-event-category{
+    margin-left: 3px;
+}
+
+#event-criteria input[type='submit']{
+    flex: 1;
+    margin-left: 3px;
+    background-color:  #e3e7e7;
+    text-transform: uppercase;
+    font-family: "Signika Negative","Comfortaa","Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+#search-event #search-event-category{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+#search-event #search-event-category input{
+    height: 125px;
+    flex: 1 0 33%; /* Provoque le retour à la ligne quand plus de 3 éléments se situent sur une même ligne */
+    margin-top: 5px;
+    padding: 12px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 30px;
+    font-family: "Comfortaa", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 6px 3px 20px #000000, 6px 3px 20px #000000, 6px 3px 20px #000000;
+    text-transform: uppercase;
+}
+
+#search-event #search-event-category input:nth-child(2), #search-event #search-event-category input:nth-child(5){
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#search-event #search-event-category input:nth-child(1){
+    background-image: url('category-img/ceremonie.jpg');
+}
+
+#search-event #search-event-category input:nth-child(2){
+    background-image: url('category-img/sport.jpg');
+}
+
+#search-event #search-event-category input:nth-child(3){
+    background-image: url('category-img/festival.jpg');
+}
+
+#search-event #search-event-category input:nth-child(4){
+    background-image: url('category-img/congres.jpg');
+}
+
+#search-event #search-event-category input:nth-child(5){
+    background-image: url('category-img/repas.jpg');
+}
+
+#search-event #search-event-category input:nth-child(6){
+    background-image: url('category-img/exposition.jpg')
+}
+
+/*****************************************************************************************/
+/* Ici on ajoutera le CSS lié à l'affichage des événements (lorsque l'on en recherche un */
+/*****************************************************************************************/
+
+
+#main-create-event{
+    margin-top: 31px;
+    background-color: #f3f3f3;
+}
+
+#main-create-event-header{
+    height: 50px;
+    display: flex;
+}
+
+#main-create-event-header h2{
+    margin: auto;
+    font-size: 1.5em;
+    font-family: "Comfortaa", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #454545;
+}
+
+#main-create-event-content{
+
+}
+
+#main-create-event-content #create-event{
+    padding: 5px;
+    margin: 5px;
+}
+
+#main-create-event-content #create-event #create-event-category{
+    background-color: #ffffff;
+    flex: 1;
+}
+
+#main-create-event-content #create-event #event-criteria #coordonneesGPS{
+    display: flex;
+    flex-direction: row;
+    margin-top: 3px;
+    width: 100%;
+}
+
+#main-create-event-content #create-event #event-criteria #coordonneesGPS input:nth-child(1), #main-create-event-content #create-event #event-criteria #coordonneesGPS input:nth-child(2){
+    flex: 1;
+}
+
+
+#main-create-event-content #create-event #create-event-additional-information{
+    margin-top: 3px;
+    display: flex;
+}
+
+#main-create-event-content #create-event #create-event-additional-information input[type='file']{
+    display: none;
+}
+
+#main-create-event-content #create-event #create-event-additional-information #alternativeUpload{
+    width: 200px;
+    height: 200px;
+    background-color: #ededed;
+    border: #ccc ridge 1px;
+    background-image: url('img-bg.png');
+    border-radius: 5px;
+}
+
+#main-create-event-content #create-event #create-event-additional-information #event-description{
+    flex: 1;
+    margin-left: 3px;
+    padding: 3px;
+    max-height: 196px;
+}
+
+#main-create-event-content #create-event input[type='submit']{
+    width: 100%;
+    margin-top: 3px;
+    background-color:  #e3e7e7;
+    text-transform: uppercase;
+    font-family: "Signika Negative","Comfortaa","Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+
+/* FOOTER */
+footer{
+    height: 500px;
+    background-color: #656565;
+    display: flex;
+    margin-top: 31px;
+}
+
+footer .footer-content{
+    width: 1024px;
+    height: 100%;
+    margin: auto;
+}
+
+
+
