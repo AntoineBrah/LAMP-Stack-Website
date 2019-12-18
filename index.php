@@ -5,7 +5,6 @@ session_start();
 if(isset($_SESSION['Pseudo']))
     header('Location: signin_server.php');
 
-
 ?>
 
 

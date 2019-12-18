@@ -9,10 +9,13 @@ catch (Exception $e){
     die('Erreur : ' . $e->getMessage());
 }
 
+// Si l'utilisateur essaye de se connecter sans cliquer sur le bouton de connexion alors il est immédiatement redirigé sur la page d'accueil
+if(!isset($_POST['identifiant']) && !isset($_SESSION['Pseudo']))
+    echo '<script>window.location.href=\'index.php\'</script>';
+
 
 // On met cette condition pour vérifier que l'utilisateur n'est pas déjà connecté (auquel cas pas besoin de récupérer des infos dans la BDD...)
 if(!isset($_SESSION['Pseudo'])){
-
     // On définit une Alertbox en PHP
     function phpAlert($msg) {
         echo '<script type="text/javascript">
@@ -46,7 +49,7 @@ if(!isset($_SESSION['Pseudo'])){
         // On le met en majuscule car dans le SGBD les attributs ne sont pas sensibles à la casse alors que le nom des tables si
 
         // IMPOSSIBLE d'utiliser les marqueurs nominatifs sur le nom d'une table (WTF?)
-        $listeMembre = $bdd->prepare('SELECT Pseudo, Mdp FROM '. $groupe . ' WHERE Pseudo = :identifiant');
+        $listeMembre = $bdd->prepare('SELECT * FROM '. $groupe . ' WHERE Pseudo = :identifiant');
         $listeMembre->execute(array(
             'identifiant' => $_POST['identifiant']
         ));
@@ -55,13 +58,25 @@ if(!isset($_SESSION['Pseudo'])){
         $utilisateur = $listeMembre->fetch(); // La variable est un tableau à 1 ligne et 2 colonnes (Pseudo, Mdp)
         $listeMembre->closeCursor(); // On ferme les résultats de recherche après avoir traité chaque requête
 
+        $mdpCorrect = false;
 
-        $mdpCorrect = password_verify($_POST['motdepasse'], $utilisateur['Mdp']);
+        if($groupe == 'ADMINISTRATEUR'){
+            if($_POST['motdepasse'] == $utilisateur['Mdp']){
+                $mdpCorrect = true;
+            }
+        }
+        else{
+            $mdpCorrect = password_verify($_POST['motdepasse'], $utilisateur['Mdp']);
+        }
 
         if($mdpCorrect){
             //echo 'Félicitation : l\'utilisateur est bien connecté !';
             $_SESSION['Pseudo'] = $utilisateur['Pseudo'];
             $_SESSION['Groupe'] = $groupe;
+            $_SESSION['Email'] = $utilisateur['Email'];
+            $_SESSION['Nom'] = $utilisateur['Nom'];
+            $_SESSION['Prenom'] = $utilisateur['Prenom'];
+            $_SESSION['Genre'] = $utilisateur['Genre'];
             //echo '<br>L utilisateur est : ' . $_SESSION['Pseudo'] . "<br>Son groupe est : " . $_SESSION['Groupe'];
             //echo '<script>alert(\'Authentification réussie.\');</script>';
         }
@@ -97,6 +112,12 @@ if(!isset($_SESSION['Pseudo'])){
         <!-- Ajout de la barre de navigation modifiée -->
         <?php include("navbar2.php"); ?>
 
+        <!-- Ajout du contenu de consultation de profil -->
+        <?php include("profil.php") ?>
+
+         <!-- Conteneur filter -->
+         <div id='filter'></div>
+
         <!-- Ajout du header -->
         <?php include("header.php") ?>
 
@@ -119,6 +140,6 @@ if(!isset($_SESSION['Pseudo'])){
         <script src='nav_settings.js'></script>
         <script src='header_slideshow.js'></script>
         <script src='search_event_settings.js'></script>
-        <script src='form_parse.js'></script>
+        <script src='admintool.js'></script>
     </body>
 </html>

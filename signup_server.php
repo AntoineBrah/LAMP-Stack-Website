@@ -8,6 +8,11 @@ catch (Exception $e){
     die('Erreur : ' . $e->getMessage());
 }
 
+
+// Si l'utilisateur essaye de se créer un compte sans cliquer sur le bouton d'inscription, il est immédiatement redirigé sur la page d'accueil
+if(!isset($_POST['pseudonyme']))
+    echo '<script>window.location.href=\'index.php\'</script>';
+
 // On définit une Alertbox en PHP
 function phpAlert($msg) {
     echo '<script type="text/javascript">

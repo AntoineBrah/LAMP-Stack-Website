@@ -21,7 +21,7 @@
             <div class='nav-identification2'>
                 <?php echo '<button class=\'online-button\'><i class=\'fas fa-user-check\' style=\'font-size:18px\'></i>' . $_SESSION['Pseudo'] . '</button>' ?>
                 <div class='nav-identification2-dropdown'>
-                    <a href='#' id='#'>Mon profil</a>
+                    <a href='#' id='monProfil'>Mon profil</a>
                     <a href='logout.php'>Déconnexion</a>
                 </div>
             </div>

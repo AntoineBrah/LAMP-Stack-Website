@@ -9,9 +9,12 @@ catch (Exception $e){
     die('Erreur : ' . $e->getMessage());
 }
 
+// Si l'utilisateur essaye de créer un événement sans cliquer sur le bouton du formulaire il est redirigé sur la page d'accueil
+if(!isset($_POST['saisieNomEvenement'])){
+    echo '<script>window.location.href=\'index.php\'</script>';
+}
 // On regarde si l'utilisateur est connecté ou pas
-if(!isset($_SESSION['Pseudo'])){
-    // On définit une Alertbox en PHP qui redirige sur la page d'accueil
+else if(!isset($_SESSION['Pseudo'])){
     function phpAlert($msg) {
         echo '<script type="text/javascript">
             alert("' . $msg . '");
@@ -22,16 +25,17 @@ if(!isset($_SESSION['Pseudo'])){
     phpAlert('Vous devez être connecté pour pouvoir réaliser cette action');
 }
 else{
-    // Si l'utilisateur est bien connecté alors on regarde qu'il ne soit pas de type Visiteur (seul un Contributeur ou un Admin peut créer un événement)
-    if(strtolower($_SESSION['Groupe']) == 'visiteur'){
-        // On définit une Alertbox en PHP qui redirige sur la page signin_server.php
-        function phpAlert($msg) {
-            echo '<script type="text/javascript">
-                alert("' . $msg . '");
-                window.location.href=\'signin_server.php\';
-            </script>';
-        }
 
+    function phpAlert($msg) {
+        echo '<script type="text/javascript">
+            alert("' . $msg . '");
+            window.location.href=\'index.php\';
+        </script>';
+    }
+
+    // Si l'utilisateur est bien connecté alors on regarde qu'il ne soit pas de type Visiteur ou Administrateur (seul un Contributeur peut créer un événement)
+    if(strtolower($_SESSION['Groupe']) != 'contributeur'){
+        // On définit une Alertbox en PHP qui redirige sur la page signin_server.php
         phpAlert('Vous n\'avez pas les droits pour pouvoir réaliser cette action');
     }
 }
@@ -45,83 +49,140 @@ $latitudeEvenement = $_POST['latitudeEvenement'];
 $longitudeEvenement = $_POST['longitudeEvenement'];
 $descriptionEvenement = $_POST['descriptionEvenement'];
 
+
+
+/**********************************************************************************************/
+/********** OBTENTION DE RÉGION/DÉPARTEMENT/VILLE A PARTIR DE LA LATITUDE/LONGITUDE ***********/
+/**********************************************************************************************/
+
+// Permet de supprimer les accents d'une chaine de caractère
+// On va l'utiliser pour enlever les accents et ainsi effectuer des comparaisons
+function skip_accents( $str, $charset='utf-8' ) {
+    $str = htmlentities( $str, ENT_NOQUOTES, $charset );
+    $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
+    $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
+    $str = preg_replace( '#&[^;]+;#', '', $str );
+    return $str;
+}
+
+//Les @ permettent de cacher les erreurs (cas ou l'utilisateur entrerait des valeurs incohérentes pour la latitude/longitude)
+@$url = 'http://open.mapquestapi.com/nominatim/v1/reverse.php?key=Ajv621GZGf6AsnuaCpjM5qOH9NfLPqCS&format=json&lat=' . $latitudeEvenement . '&lon=' . $longitudeEvenement;
+@$json = file_get_contents($url);
+
+@$data = json_decode($json, TRUE);
+
+@$areaInformation = strtolower(skip_accents($data['display_name']));
+
+// Ici on récupère le nom de la région ainsi que de la commune (ville ou village)
+// Pour le département c'est un peu plus compliqué...
+$nomRegion = 'undefined';
+$nomCommune = 'undefined';
+
+if(!isset($data['address']['village'])){
+    $nomRegion = $data['address']['state'];
+    $nomCommune = $data['address']['county'];
+}
+else{
+    $nomRegion = $data['address']['state'];
+    $nomCommune = $data['address']['village'];
+}
+
+
+//echo $areaInformation;
+
+/********************/
+
+
+$localUrl = 'departement.json';
+$localJson = file_get_contents($localUrl);
+$localData = json_decode($localJson, TRUE);
+
+//print_r($localData[0]['departmentName']);
+
+/*******************/
+
+$listeDepartement = array(); // On déclare un tableau vide
+
+for($i=0; $i<count($localData); $i++){
+    array_push($listeDepartement, $localData[$i]['departmentName']);
+}
+
+/* Le tableau 'listeDepartement contient désormais tous les départements de France */
+
+/* Maintenant on va essayer d'extraire à partir du 'display_name' obtenu par les données longitude et latitude, le département précis */
+/* Les données sont de la forme (ex) 'Préfecture Côtes d'Armor (22), Place du Général de Gaulle, Saint-Brieuc, Côtes-d'Armor, Bretagne, France métropolitaine, 22000, France' */
+/* Ce qui nous intéresse est uniquement le département (ici c'est donc 'Côtes-d'Armor) */
+
+$nomDepartement = 'undefined';
+
+// On regarde si une chaine de caractère (département) de $listeDepartement est une sous-chaîne de la chaine $data
+for($i=0; $i<count($localData); $i++){
+
+    /* J'ai eu des problèmes pour obtenir la sous-chaine, en effet le département Ain (par exemple) est reconnu dans certains mot comme : 'sAINt-brieuc'... */
+    /* Donc obligation de s'assurer que le caractère présent juste avant la première lettre du mot que l'on cherche dans la chaine est un espace */
+    if(strpos($areaInformation, strtolower(skip_accents($localData[$i]['departmentName'])))){
+        if(($areaInformation[strpos($areaInformation, strtolower(skip_accents($localData[$i]['departmentName'])))-1]) == ' '){
+            $nomDepartement = $localData[$i]['departmentName']; //On obtient le nom du département
+            break; //On a le nom du département plus besoin de continuer à itérer
+        }
+    }
+}
+
+/**********************************************************************************************/
+/**********************************************************************************************/
+
+
 /* Ici on effectuera un contrôle des données saisies (expressions régulières...)
 
 
 */
 
+
 // On déclare une variable estEnvoye afin de savoir si on peut afficher un message indiquant que l'événement
 // a bien été créé
 $estEnvoye = false; 
 
-try{
-    $req = $bdd->prepare('INSERT INTO EVENEMENT (Nom, Date_Evenement, Theme, Descriptif, EffectifMin, EffectifMax, PseudoC, Latitude, Longitude) VALUES (:nom, :date_evenement, :theme, :descriptif, :effectifmin, :effectifmax, :pseudo_c, :latitude, :longitude)');
-    $req->execute(array(
-        'nom' => $nomEvenement,
-        'date_evenement' => $dateEvenement,
-        'theme' => $categorieEvenement,
-        'descriptif' => $descriptionEvenement,
-        'effectifmin' => $effectifMinEvenement,
-        'effectifmax' => $effectifMaxEvenement,
-        'pseudo_c' => $_SESSION['Pseudo'],
-        'latitude' => $latitudeEvenement,
-        'longitude' => $longitudeEvenement
-    ));
-
-    $estEnvoye = true; // L'événement a bien été créé
-}
-catch(PDOException $e){
+// Si on ne peut pas déterminer la région à partir des coordonnées GPS alors cela signifie que la longitude et la latitude
+// fournies sont fausses
+if($nomRegion == 'undefined'){
     function phpAlert($msg) {
         echo '<script type="text/javascript">
             alert("' . $msg . '");
-            window.location.href=\'sigin_server.php\';
+            window.location.href=\'index.php\';
         </script>';
     }
 
-    phpAlert('Erreur lors de l\'envoi de la requête : ' . $e->getMessage());
+    phpAlert('Erreur : la latitude et longitude que vous avez saisi ne correspondent a aucune coordonnée géographique situé en France.');
 }
+else{
+
+    if(isset($_SESSION['Pseudo']) && (strtolower($_SESSION['Groupe']) == 'contributeur')){
+        try{      
+            $req = $bdd->prepare('INSERT INTO EVENEMENT (Nom, Date_Evenement, Theme, Descriptif, EffectifMin, EffectifMax, PseudoC, Latitude, Longitude, Region, Departement, Commune) VALUES (:nom, :date_evenement, :theme, :descriptif, :effectifmin, :effectifmax, :pseudo_c, :latitude, :longitude, :region, :departement, :commune)');
+            $req->execute(array(
+                'nom' => $nomEvenement,
+                'date_evenement' => $dateEvenement,
+                'theme' => $categorieEvenement,
+                'descriptif' => $descriptionEvenement,
+                'effectifmin' => $effectifMinEvenement,
+                'effectifmax' => $effectifMaxEvenement,
+                'pseudo_c' => $_SESSION['Pseudo'],
+                'latitude' => $latitudeEvenement,
+                'longitude' => $longitudeEvenement,
+                'region' => $nomRegion,
+                'departement' => $nomDepartement,
+                'commune' => $nomCommune
+            ));
+
+            $estEnvoye = true; // L'événement a bien été créé
+            phpAlert('L\'évenement a bien été créé !');
+        }
+        catch(PDOException $e){    
+            phpAlert('Erreur : ce nom d\'événement est déjà utilisé');
+        }
+    }
+}
+
+
+
 ?>
-
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset='utf-8'>
-        <title>Evenementia</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Vast+Shadow&amp;display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet"> 
-        <link href="https://fonts.googleapis.com/css?family=Signika+Negative|Spectral&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
-        <link rel="icon" type="image/png" href="logofavico.png">
-    </head>
-    <body>
-        <!-- Ajout de la barre de navigation modifiée -->
-        <?php include("navbar2.php"); ?>
-
-        <!-- Ajout du header -->
-        <?php include("header.php") ?>
-
-        <!-- Contenu principal de la page-->
-        <main>
-            <!-- Préambule -->
-            <?php include('preamble.php'); ?>
-
-            <!-- Formulaire de recherche d'événement -->
-            <?php include('search_event.php'); ?>
-
-            <!-- Formulaire de création d'événement -->
-            <?php include("create_event.php"); ?>
-        </main>
-
-        <!-- Ajout du footer -->
-        <?php include("footer.php") ?>
-
-        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-        <script src='nav_settings.js'></script>
-        <script src='header_slideshow.js'></script>
-        <script src='search_event_settings.js'></script>
-        <script src='form_parse.js'></script>
-    </body>
-</html>
